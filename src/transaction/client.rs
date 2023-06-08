@@ -97,7 +97,7 @@ impl TxClient {
         Ok(winstons_per_bytes)
     }
 
-    pub async fn get_tx(&self, id: Base64) -> Result<(StatusCode, Option<Tx>), Error> {
+    pub async fn get_tx(&self, id: &Base64) -> Result<(StatusCode, Option<Tx>), Error> {
         let res = self
             .client
             .get(
@@ -124,7 +124,10 @@ impl TxClient {
         Err(Error::TransactionInfoError(res.status().to_string()))
     }
 
-    pub async fn get_tx_status(&self, id: Base64) -> Result<(StatusCode, Option<TxStatus>), Error> {
+    pub async fn get_tx_status(
+        &self,
+        id: &Base64,
+    ) -> Result<(StatusCode, Option<TxStatus>), Error> {
         let res = self
             .client
             .get(
