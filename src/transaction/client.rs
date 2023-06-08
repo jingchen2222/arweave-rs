@@ -97,6 +97,20 @@ impl TxClient {
         Ok(winstons_per_bytes)
     }
 
+    pub async fn get_fee_by_filesize(&self, size: u32) -> Result<u64, Error> {
+        let url = self
+            .base_url
+            .join(&format!("price/{}", size))
+            .expect("Could not join base_url with /price/{}/{}");
+        let winstons_per_bytes = reqwest::get(url)
+            .await
+            .map_err(|e| Error::GetPriceError(e.to_string()))?
+            .json::<u64>()
+            .await
+            .expect("Could not get base fee");
+        Ok(winstons_per_bytes)
+    }
+
     pub async fn get_tx(&self, id: &Base64) -> Result<(StatusCode, Option<Tx>), Error> {
         let res = self
             .client
