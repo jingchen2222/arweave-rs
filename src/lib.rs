@@ -127,6 +127,10 @@ impl Arweave {
         self.tx_client.get_fee(target, data).await
     }
 
+    pub async fn get_fee_by_size(&self, size: u64) -> Result<u64, Error> {
+        self.tx_client.get_fee_by_filesize(size).await
+    }
+
     pub async fn get_tx(&self, id: &Base64) -> Result<(StatusCode, Option<Tx>), Error> {
         self.tx_client.get_tx(id).await
     }
