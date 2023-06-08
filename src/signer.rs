@@ -1,4 +1,4 @@
-use std::path::PathBuf;
+use std::path::Path;
 
 use data_encoding::BASE64URL;
 use jsonwebkey::JsonWebKey;
@@ -33,7 +33,7 @@ impl ArweaveSigner {
         }
     }
 
-    pub fn from_keypair_path(keypair_path: PathBuf) -> Result<ArweaveSigner, Error> {
+    pub fn from_keypair_path(keypair_path: &Path) -> Result<ArweaveSigner, Error> {
         let crypto = Provider::from_keypair_path(keypair_path);
         let signer = ArweaveSigner {
             crypto: Box::new(crypto),

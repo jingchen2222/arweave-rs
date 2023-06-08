@@ -1,8 +1,9 @@
 use std::fs;
-use std::{path::PathBuf, str::FromStr};
+use std::path::Path;
 
 use arweave_rs::crypto::base64::Base64;
 use arweave_rs::Arweave;
+use std::str::FromStr;
 use url::Url;
 
 #[tokio::main]
@@ -41,8 +42,8 @@ async fn main() {
     dbg!(status, json!(tx_status));
     */
 
-    let path = PathBuf::from_str(".wallet.json").unwrap();
-    let file_path = PathBuf::from_str("data").unwrap();
+    let path = Path::new(".wallet.json");
+    let file_path = Path::new("data");
     let target = Base64::empty();
 
     let arweave =

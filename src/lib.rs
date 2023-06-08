@@ -1,5 +1,3 @@
-use std::{fs, path::PathBuf, str::FromStr};
-
 use consts::{ARWEAVE_BASE_URL, MAX_TX_DATA};
 use crypto::base64::Base64;
 use error::Error;
@@ -7,6 +5,8 @@ use futures::{stream, Stream, StreamExt};
 use pretend::StatusCode;
 use reqwest::Client;
 use serde::{Deserialize, Serialize};
+use std::str::FromStr;
+use std::{fs, path::Path};
 use transaction::{
     client::TxClient,
     tags::{FromUtf8Strs, Tag},
@@ -59,7 +59,7 @@ impl Default for Arweave {
 }
 
 impl Arweave {
-    pub fn from_keypair_path(keypair_path: PathBuf, base_url: url::Url) -> Result<Arweave, Error> {
+    pub fn from_keypair_path(keypair_path: &Path, base_url: url::Url) -> Result<Arweave, Error> {
         let signer =
             ArweaveSigner::from_keypair_path(keypair_path).expect("Could not create signer");
         let tx_client = TxClient::new(reqwest::Client::new(), base_url.clone())
@@ -148,7 +148,7 @@ impl Arweave {
 
     pub async fn upload_file_from_path(
         &self,
-        file_path: PathBuf,
+        file_path: &Path,
         additional_tags: Vec<Tag<Base64>>,
         fee: u64,
     ) -> Result<(String, u64), Error> {

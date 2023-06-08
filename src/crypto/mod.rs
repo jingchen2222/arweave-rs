@@ -1,4 +1,4 @@
-use std::path::PathBuf;
+use std::path::Path;
 
 use self::{
     base64::Base64,
@@ -25,7 +25,7 @@ impl Default for Provider {
 }
 
 impl Provider {
-    pub fn from_keypair_path(keypair_path: PathBuf) -> Self {
+    pub fn from_keypair_path(keypair_path: &Path) -> Self {
         let signer = Signer::from_keypair_path(keypair_path)
             .expect("Could not create signer from keypair_path");
         Provider::new(Box::new(signer))

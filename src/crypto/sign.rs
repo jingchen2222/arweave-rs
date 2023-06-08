@@ -9,7 +9,7 @@ use rsa::{
     PaddingScheme, PublicKey, PublicKeyParts, RsaPrivateKey, RsaPublicKey,
 };
 use sha2::Digest;
-use std::{fs, path::PathBuf, str::FromStr};
+use std::{fs, path::Path};
 
 use super::base64::Base64;
 
@@ -20,7 +20,7 @@ pub struct Signer {
 
 impl Default for Signer {
     fn default() -> Self {
-        let path = PathBuf::from_str("res/test_wallet.json").expect("Could not open .wallet.json");
+        let path = Path::new("res/test_wallet.json");
         Self::from_keypair_path(path).expect("Could not create signer")
     }
 }
@@ -37,7 +37,7 @@ impl Signer {
         Self::new(priv_key)
     }
 
-    pub fn from_keypair_path(keypair_path: PathBuf) -> Result<Self, Error> {
+    pub fn from_keypair_path(keypair_path: &Path) -> Result<Self, Error> {
         let data = fs::read_to_string(keypair_path).expect("Could not open file");
         let jwk_parsed: jwk::JsonWebKey = data.parse().expect("Could not parse key");
 
