@@ -97,7 +97,7 @@ impl TxClient {
         Ok(winstons_per_bytes)
     }
 
-    pub async fn get_fee_by_filesize(&self, size: u32) -> Result<u64, Error> {
+    pub async fn get_fee_by_filesize(&self, size: u64) -> Result<u64, Error> {
         let url = self
             .base_url
             .join(&format!("price/{}", size))
