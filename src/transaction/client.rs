@@ -83,7 +83,7 @@ impl TxClient {
         Base64::from_str(&last_tx_str).unwrap()
     }
 
-    pub async fn get_fee(&self, target: Base64, data: Vec<u8>) -> Result<u64, Error> {
+    pub async fn get_fee(&self, target: &Base64, data: &[u8]) -> Result<u64, Error> {
         let url = self
             .base_url
             .join(&format!("price/{}/{}", data.len(), target))
@@ -94,7 +94,6 @@ impl TxClient {
             .json::<u64>()
             .await
             .expect("Could not get base fee");
-
         Ok(winstons_per_bytes)
     }
 
