@@ -2,7 +2,6 @@ use reqwest::{
     header::{ACCEPT, CONTENT_TYPE},
     StatusCode,
 };
-use serde_json::json;
 use std::{str::FromStr, thread::sleep, time::Duration};
 
 use crate::{
@@ -44,8 +43,6 @@ impl TxClient {
             .base_url
             .join("tx")
             .expect("Could not join base_url with /tx");
-
-        dbg!(json!(signed_transaction));
         while (retries < CHUNKS_RETRIES) & (status != reqwest::StatusCode::OK) {
             let res = self
                 .client
