@@ -85,7 +85,7 @@ impl Helpers<usize> for usize {
     }
 }
 /// Generates data chunks from which the calculation of root id starts.
-pub fn generate_leaves(data: Vec<u8>) -> Result<Vec<Node>, Error> {
+pub fn generate_leaves(data: &[u8]) -> Result<Vec<Node>, Error> {
     let mut data_chunks: Vec<&[u8]> = data.chunks(MAX_CHUNK_SIZE).collect();
 
     #[allow(unused_assignments)]

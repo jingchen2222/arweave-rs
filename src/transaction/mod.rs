@@ -104,7 +104,7 @@ impl Tx {
                 ..Default::default()
             })
         } else {
-            let mut chunks = generate_leaves(data.clone()).unwrap();
+            let mut chunks = generate_leaves(&data).unwrap();
             let root = generate_data_root(chunks.clone()).unwrap();
             let data_root = Base64(root.id.into_iter().collect());
             let mut proofs = resolve_proofs(root, None).unwrap();
@@ -157,7 +157,6 @@ impl Tx {
             } else {
                 "application/octet-stream"
             };
-
             tags.push(Tag::<Base64>::from_utf8_strs("Content-Type", content_type)?)
         }
 
