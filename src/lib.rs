@@ -190,7 +190,6 @@ impl Arweave {
                 .await
                 .expect("Could not post transaction")
         };
-
         Ok((id, reward))
     }
 
