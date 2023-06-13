@@ -134,6 +134,33 @@ impl TxClient {
         Err(Error::TransactionInfoError(res.status().to_string()))
     }
 
+    pub async fn get_tx_data(&self, id: &Base64) -> Result<(StatusCode, Option<Vec<u8>>), Error> {
+        let res = self
+            .client
+            .get(
+                self.base_url
+                    .join(&format!("tx/{}/data", id))
+                    .expect("Could not join base_url with /tx"),
+            )
+            .send()
+            .await
+            .expect("Could not get tx");
+
+        if res.status() == StatusCode::OK {
+            let text = res
+                .text()
+                .await
+                .expect("Could not parse response to string");
+            let body = Base64::from_str(text.as_str()).expect("fail to decode body");
+            return Ok((StatusCode::OK, Some(body.0)));
+        } else if res.status() == StatusCode::ACCEPTED {
+            //Tx is pending
+            return Ok((StatusCode::ACCEPTED, None));
+        }
+
+        Err(Error::TransactionInfoError(res.status().to_string()))
+    }
+
     pub async fn get_tx_status(
         &self,
         id: &Base64,
