@@ -135,6 +135,10 @@ impl Arweave {
         self.tx_client.get_tx(id).await
     }
 
+    pub async fn get_tx_data(&self, id: &Base64) -> Result<(StatusCode, Option<Vec<u8>>), Error> {
+        self.tx_client.get_tx_data(id).await
+    }
+
     pub async fn get_tx_status(
         &self,
         id: &Base64,
