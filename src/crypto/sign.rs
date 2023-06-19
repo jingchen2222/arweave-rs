@@ -26,7 +26,7 @@ impl Default for Signer {
 }
 
 impl Signer {
-    fn new(priv_key: RsaPrivateKey) -> Self {
+    pub fn new(priv_key: RsaPrivateKey) -> Self {
         Self { priv_key }
     }
 

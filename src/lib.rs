@@ -4,6 +4,7 @@ use error::Error;
 use futures::{stream, Stream, StreamExt};
 use pretend::StatusCode;
 use reqwest::Client;
+use rsa::RsaPrivateKey;
 use serde::{Deserialize, Serialize};
 use std::str::FromStr;
 use std::{fs, path::Path};
@@ -59,6 +60,20 @@ impl Default for Arweave {
 }
 
 impl Arweave {
+    pub fn from_private_key(priv_key: RsaPrivateKey, base_url: url::Url) -> Result<Arweave, Error> {
+        let tx_client = TxClient::new(reqwest::Client::new(), base_url.clone())
+            .expect("Could not create TxClient");
+        let signer = ArweaveSigner::from_private_key(priv_key).expect("Could not create TxClient");
+        let uploader = Uploader::new(base_url.clone());
+        let arweave = Arweave {
+            base_url,
+            signer,
+            tx_client,
+            uploader,
+        };
+        Ok(arweave)
+    }
+
     pub fn from_keypair_path(keypair_path: &Path, base_url: url::Url) -> Result<Arweave, Error> {
         let signer =
             ArweaveSigner::from_keypair_path(keypair_path).expect("Could not create signer");

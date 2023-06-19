@@ -1,16 +1,16 @@
-use std::path::Path;
-
 use data_encoding::BASE64URL;
 use jsonwebkey::JsonWebKey;
 use rand::thread_rng;
 use rsa::{pkcs8::DecodePublicKey, PaddingScheme, PublicKey, RsaPublicKey};
 use sha2::Digest;
+use std::path::Path;
 
 use crate::{
-    crypto::{base64::Base64, hash::ToItems, Provider},
+    crypto::{base64::Base64, hash::ToItems, sign::Signer, Provider},
     error::Error,
     transaction::Tx,
 };
+use rsa::RsaPrivateKey;
 
 pub struct ArweaveSigner {
     crypto: Box<Provider>,
@@ -31,6 +31,14 @@ impl ArweaveSigner {
             true => Ok(()),
             false => Err(Error::InvalidSignature),
         }
+    }
+
+    pub fn from_private_key(priv_key: RsaPrivateKey) -> Result<ArweaveSigner, Error> {
+        let crypto = Provider::new(Box::new(Signer::new(priv_key)));
+        let signer = ArweaveSigner {
+            crypto: Box::new(crypto),
+        };
+        Ok(signer)
     }
 
     pub fn from_keypair_path(keypair_path: &Path) -> Result<ArweaveSigner, Error> {
