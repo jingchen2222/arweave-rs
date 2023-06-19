@@ -3,7 +3,7 @@
 use crate::error::Error;
 use data_encoding::BASE64URL;
 use jsonwebkey as jwk;
-use rand::thread_rng;
+use rand::{thread_rng, CryptoRng, Rng};
 use rsa::{
     pkcs8::{DecodePrivateKey, DecodePublicKey},
     PaddingScheme, PublicKey, PublicKeyParts, RsaPrivateKey, RsaPublicKey,
@@ -42,6 +42,12 @@ impl Signer {
         let jwk_parsed: jwk::JsonWebKey = data.parse().expect("Could not parse key");
 
         Ok(Self::from_jwk(jwk_parsed))
+    }
+
+    pub fn from_random<R: Rng + CryptoRng>(r: &mut R) -> Self {
+        let bits = 2048;
+        let priv_key = RsaPrivateKey::new(r, bits).expect("failed to generate a key");
+        Self::new(priv_key)
     }
 
     pub fn public_key(&self) -> Base64 {
