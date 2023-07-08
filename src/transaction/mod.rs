@@ -87,10 +87,6 @@ impl<'a> ToItems<'a, Tx> for Tx {
 }
 
 impl Tx {
-    fn base_tag() -> Tag<Base64> {
-        Tag::<Base64>::from_utf8_strs("User-Agent", &format!("arweave-rs/{}", VERSION)).unwrap()
-    }
-
     fn generate_merkle(data: Vec<u8>) -> Result<Tx, Error> {
         if data.is_empty() {
             let empty = Base64(vec![]);
@@ -143,12 +139,9 @@ impl Tx {
         if quantity.lt(&0) {
             return Err(Error::InvalidValueForTx);
         }
-
         let mut transaction = Tx::generate_merkle(data).unwrap();
         transaction.owner = crypto.keypair_modulus();
-
-        let mut tags = vec![Tx::base_tag()];
-
+        let mut tags = vec![];
         // Get content type from [magic numbers](https://developer.mozilla.org/en-US/docs/Web/HTTP/Basics_of_HTTP/MIME_types)
         // and include additional tags if any.
         if auto_content_tag {
@@ -163,10 +156,8 @@ impl Tx {
         // Add other tags if provided.
         tags.extend(other_tags);
         transaction.tags = tags;
-
         // Fetch and set last_tx if not provided (primarily for testing).
         transaction.last_tx = last_tx;
-
         transaction.reward = fee;
         transaction.quantity = Currency::from(quantity);
         transaction.target = target;
