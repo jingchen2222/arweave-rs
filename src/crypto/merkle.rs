@@ -278,7 +278,7 @@ mod tests {
     #[tokio::test]
     async fn test_generate_leaves() -> Result<(), Error> {
         let data = fs::read(ONE_MB_BIN).await.unwrap();
-        let leaves: Vec<Node> = generate_leaves(data).unwrap();
+        let leaves: Vec<Node> = generate_leaves(data.as_slice()).unwrap();
         assert_eq!(
             leaves[1],
             Node {
@@ -302,7 +302,7 @@ mod tests {
     #[tokio::test]
     async fn test_hash_branch() -> Result<(), Error> {
         let data = fs::read(ONE_MB_BIN).await.unwrap();
-        let leaves: Vec<Node> = generate_leaves(data).unwrap();
+        let leaves: Vec<Node> = generate_leaves(data.as_slice()).unwrap();
         let mut nodes_iter = leaves.into_iter();
         let left = nodes_iter.next().unwrap();
         let right = nodes_iter.next().unwrap();
@@ -329,7 +329,7 @@ mod tests {
     #[tokio::test]
     async fn test_build_layer() -> Result<(), Error> {
         let data = fs::read(ONE_MB_BIN).await.unwrap();
-        let leaves: Vec<Node> = generate_leaves(data).unwrap();
+        let leaves: Vec<Node> = generate_leaves(data.as_slice()).unwrap();
         let layer = build_layer(leaves).unwrap();
         assert_eq!(
             layer[0].id,
@@ -351,7 +351,7 @@ mod tests {
             13, 66, 76, 111, 151, 198, 191, 18, 129, 188, 244, 243, 122, 39, 159, 246, 73, 77, 231,
             100, 200, 2, 138, 245, 233, 31, 171, 188, 172, 188, 68, 16,
         ];
-        let leaves: Vec<Node> = generate_leaves(data).unwrap();
+        let leaves: Vec<Node> = generate_leaves(data.as_slice()).unwrap();
         let root = generate_data_root(leaves).unwrap();
         assert_eq!(root.id, root_actual);
         Ok(())
@@ -361,7 +361,7 @@ mod tests {
     async fn test_generate_proof() -> Result<(), Error> {
         let proof_actual = Base64::from_str("7EAC9FsACQRwe4oIzu7Mza9KjgWKT4toYxDYGjWrCdp0QgsrYS6AueMJ_rM6ZEGslGqjUekzD3WSe7B5_fwipgAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACAAAnH6dASdQCigcL43lp0QclqBaSncF4TspuvxoFbn2L18EXpQrP1wkbwdIjSSWQQRt_F31yNvxtc09KkPFtzMKAwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABAAAIHiHU9QwOImFzjqSlfxkJJCtSbAox6TbbFhQvlEapSgAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQAAA").unwrap();
         let data = fs::read(REBAR3).await.unwrap();
-        let leaves: Vec<Node> = generate_leaves(data).unwrap();
+        let leaves: Vec<Node> = generate_leaves(data.as_slice()).unwrap();
         let root = generate_data_root(leaves).unwrap();
 
         let proofs = resolve_proofs(root, None).unwrap();
@@ -377,7 +377,7 @@ mod tests {
     #[tokio::test]
     async fn test_validate_chunks() -> Result<(), Error> {
         let data = fs::read(ONE_MB_BIN).await.unwrap();
-        let leaves: Vec<Node> = generate_leaves(data).unwrap();
+        let leaves: Vec<Node> = generate_leaves(data.as_slice()).unwrap();
         let root = generate_data_root(leaves.clone()).unwrap();
         let root_id = root.id;
         let proofs = resolve_proofs(root, None).unwrap();
@@ -395,7 +395,7 @@ mod tests {
         let data_root_actual =
             Base64::from_str("t-GCOnjPWxdox950JsrFMu3nzOE4RktXpMcIlkqSUTw").unwrap();
         let data = fs::read(REBAR3).await.unwrap();
-        let leaves: Vec<Node> = generate_leaves(data).unwrap();
+        let leaves: Vec<Node> = generate_leaves(data.as_slice()).unwrap();
         let root = generate_data_root(leaves).unwrap();
         assert_eq!(root.id.to_vec(), data_root_actual.0);
         Ok(())
@@ -409,7 +409,7 @@ mod tests {
             13, 66, 76, 111, 151, 198, 191, 18, 129, 188, 244, 243, 122, 39, 159, 246, 73, 77, 231,
             100, 200, 2, 138, 245, 233, 31, 171, 188, 172, 188, 68, 16,
         ];
-        let leaves: Vec<Node> = generate_leaves(data).unwrap();
+        let leaves: Vec<Node> = generate_leaves(data.as_slice()).unwrap();
         let root = generate_data_root(leaves).unwrap();
         println!("{:?} {:?}", root.id, &root_actual);
         assert_eq!(root.id, root_actual);
@@ -421,7 +421,7 @@ mod tests {
         let data = vec![0; 256 * 1024 + 1];
         // root id as calculate by arweave-js
         let root_actual = Base64::from_str("br1Vtl3TS_NGWdHmYqBh3-MxrlckoluHCZGmUZk-dJc").unwrap();
-        let leaves: Vec<Node> = generate_leaves(data).unwrap();
+        let leaves: Vec<Node> = generate_leaves(data.as_slice()).unwrap();
         let root = generate_data_root(leaves).unwrap();
         println!("{}", Base64(root.id.to_vec()));
         assert_eq!(root.id, root_actual.0.as_ref());
@@ -431,7 +431,7 @@ mod tests {
     #[tokio::test]
     async fn test_even_chunks() -> Result<(), Error> {
         let data = fs::read(ONE_MB_BIN).await.unwrap();
-        let leaves: Vec<Node> = generate_leaves(data).unwrap();
+        let leaves: Vec<Node> = generate_leaves(data.as_slice()).unwrap();
         println!("{:?}", leaves[4]);
         assert_eq!(leaves.len(), 8);
         Ok(())
@@ -440,7 +440,7 @@ mod tests {
     #[test]
     fn test_small_last_chunk() -> Result<(), Error> {
         let data = vec![0; 256 * 1024 + 1];
-        let leaves: Vec<Node> = generate_leaves(data).unwrap();
+        let leaves: Vec<Node> = generate_leaves(data.as_slice()).unwrap();
         assert_eq!(131073, leaves[0].max_byte_range);
         assert_eq!(131072, leaves[1].max_byte_range - leaves[1].min_byte_range);
         Ok(())

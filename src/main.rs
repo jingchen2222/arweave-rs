@@ -48,7 +48,7 @@ async fn main() {
 
     let arweave =
         Arweave::from_keypair_path(path, Url::from_str("https://arweave.net").unwrap()).unwrap();
-    let data = fs::read(file_path.clone()).expect("Could not read file");
+    let data = fs::read(file_path).expect("Could not read file");
 
     let fee = arweave.get_fee(&target, &data).await.unwrap();
 

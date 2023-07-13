@@ -178,7 +178,7 @@ impl Arweave {
         let mut auto_content_tag = true;
         let mut additional_tags = additional_tags;
 
-        if let Some(content_type) = mime_guess::from_path(file_path.clone()).first() {
+        if let Some(content_type) = mime_guess::from_path(file_path).first() {
             auto_content_tag = false;
             let content_tag: Tag<Base64> =
                 Tag::from_utf8_strs("Content-Type", content_type.as_ref())?;
@@ -268,7 +268,7 @@ mod tests {
 
         let path = PathBuf::from_str("res/test_wallet.json").unwrap();
         let arweave =
-            Arweave::from_keypair_path(path, Url::from_str(ARWEAVE_BASE_URL).unwrap()).unwrap();
+            Arweave::from_keypair_path(path.as_path(), Url::from_str(ARWEAVE_BASE_URL).unwrap()).unwrap();
 
         match arweave.verify_transaction(&tx) {
             Ok(_) => Ok(()),
