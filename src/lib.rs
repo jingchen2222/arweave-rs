@@ -268,7 +268,8 @@ mod tests {
 
         let path = PathBuf::from_str("res/test_wallet.json").unwrap();
         let arweave =
-            Arweave::from_keypair_path(path.as_path(), Url::from_str(ARWEAVE_BASE_URL).unwrap()).unwrap();
+            Arweave::from_keypair_path(path.as_path(), Url::from_str(ARWEAVE_BASE_URL).unwrap())
+                .unwrap();
 
         match arweave.verify_transaction(&tx) {
             Ok(_) => Ok(()),
