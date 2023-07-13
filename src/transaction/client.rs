@@ -54,6 +54,7 @@ impl TxClient {
                 .await
                 .expect("Could not post transaction");
             status = res.status();
+            dbg!(status);
             if status == reqwest::StatusCode::OK {
                 return Ok((signed_transaction.id.clone(), signed_transaction.reward));
             }
